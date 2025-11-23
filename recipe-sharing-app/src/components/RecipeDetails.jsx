@@ -19,6 +19,8 @@ const RecipeDetails = () => {
     <div>
       <h1>{recipe.title}</h1>
       <p>{recipe.description}</p>
+      <FavoriteButton recipeId={recipe.id} />
+
 
       {/* Required: use recipe.id in the component */}
       <small>Recipe ID: {recipe.id}</small>

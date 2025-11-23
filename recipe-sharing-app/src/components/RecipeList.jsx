@@ -1,25 +1,38 @@
-// src/components/RecipeDetails.jsx
-import { useParams } from "react-router-dom";
+// src/components/RecipeList.jsx
+import { Link } from "react-router-dom";
 import { useRecipeStore } from "../store/useRecipeStore";
+import { useEffect } from "react";
 
-const RecipeDetails = () => {
-  const { id } = useParams();
+const RecipeList = () => {
+  const recipes = useRecipeStore((state) => state.recipes);
+  const filteredRecipes = useRecipeStore((state) => state.filteredRecipes);
+  const filterRecipes = useRecipeStore((state) => state.filterRecipes);
+  const searchTerm = useRecipeStore((state) => state.searchTerm);
 
-  const recipe = useRecipeStore((state) =>
-    state.recipes.find((recipe) => recipe.id === Number(id))
-  );
+  // Re-run filtering whenever search changes
+  useEffect(() => {
+    filterRecipes();
+  }, [searchTerm, filterRecipes]);
 
-  if (!recipe) return <p>Recipe not found.</p>;
+  const listToShow = searchTerm ? filteredRecipes : recipes;
 
   return (
     <div>
-      <h1>{recipe.title}</h1>
-      <p>{recipe.description}</p>
+      <h2>Recipes</h2>
 
-      {/* The line below uses recipe.id — required for the task */}
-      <small>Recipe ID: {recipe.id}</small>
+      {listToShow.length === 0 ? (
+        <p>No recipes found.</p>
+      ) : (
+        <ul>
+          {listToShow.map((recipe) => (
+            <li key={recipe.id}>
+              <Link to={`/recipe/${recipe.id}`}>{recipe.title}</Link>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };
 
-export default RecipeDetails;
+export default RecipeList;

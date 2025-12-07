@@ -6,7 +6,6 @@ function HomePage() {
   const [recipes, setRecipes] = useState([])
 
   useEffect(() => {
-    // Load mock data
     setRecipes(recipesData)
   }, [])
 

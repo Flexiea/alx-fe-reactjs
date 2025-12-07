@@ -1,18 +1,79 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import HomePage from "./components/HomePage";
-import RecipeDetail from "./components/RecipeDetail";
-import AddRecipeForm from "./components/AddRecipeForm";
+import { useState } from "react";
 
-function App() {
+function AddRecipeForm() {
+  const [title, setTitle] = useState("");
+  const [ingredients, setIngredients] = useState("");
+  const [steps, setSteps] = useState("");  // renamed from instructions
+  const [errors, setErrors] = useState({});
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const newErrors = {};
+    if (!title.trim()) newErrors.title = "Title is required";
+    if (!ingredients.trim()) newErrors.ingredients = "Ingredients are required";
+    if (!steps.trim()) newErrors.steps = "Steps are required";  // updated
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    // For ALX, just log data
+    console.log({ title, ingredients, steps });
+
+    // Reset form
+    setTitle("");
+    setIngredients("");
+    setSteps("");
+    setErrors({});
+  };
+
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/recipe/:id" element={<RecipeDetail />} />
-        <Route path="/add" element={<AddRecipeForm />} />
-      </Routes>
-    </Router>
+    <div className="max-w-xl mx-auto p-6 mt-10">
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label htmlFor="title" className="block mb-1 font-medium">Title</label>
+          <input
+            id="title"
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="ingredients" className="block mb-1 font-medium">Ingredients</label>
+          <textarea
+            id="ingredients"
+            value={ingredients}
+            onChange={(e) => setIngredients(e.target.value)}
+            rows="3"
+            className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          ></textarea>
+        </div>
+
+        <div>
+          <label htmlFor="steps" className="block mb-1 font-medium">Preparation Steps</label>
+          <textarea
+            id="steps"
+            value={steps}
+            onChange={(e) => setSteps(e.target.value)}
+            rows="4"
+            className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          ></textarea>
+        </div>
+
+        <button
+          type="submit"
+          className="w-full bg-blue-600 text-white font-semibold py-2 rounded hover:bg-blue-700 transition"
+        >
+          Submit Recipe
+        </button>
+      </form>
+    </div>
   );
 }
 
-export default App;
+export default AddRecipeForm;

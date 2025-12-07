@@ -1,67 +1,99 @@
 import { useState } from "react";
 
-export default function AddRecipeForm({ onAddRecipe }) {
+function AddRecipeForm() {
   const [title, setTitle] = useState("");
   const [ingredients, setIngredients] = useState("");
   const [steps, setSteps] = useState("");
 
+  // Required by ALX
+  const [errors, setErrors] = useState({});
+
+  const validate = () => {
+    const newErrors = {};
+
+    if (!title.trim()) newErrors.title = "Title is required.";
+    if (!ingredients.trim()) newErrors.ingredients = "Ingredients are required.";
+    if (!steps.trim()) newErrors.steps = "Preparation steps are required.";
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    if (!validate()) return;
+
     const newRecipe = {
-      id: Date.now(),
       title,
-      ingredients: ingredients.split("\n"),
-      steps: steps.split("\n"),
+      ingredients,
+      steps,
     };
 
-    onAddRecipe(newRecipe);
+    console.log("New Recipe Submitted:", newRecipe);
+    alert("Recipe added successfully!");
 
+    // Clear form
     setTitle("");
     setIngredients("");
     setSteps("");
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 p-4 border rounded">
+    <div className="max-w-xl mx-auto p-6">
+      <h1 className="text-3xl font-bold mb-6 text-center">Add New Recipe</h1>
 
-      <div>
-        <label className="block font-semibold mb-1">Title</label>
-        <input
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="w-full border px-2 py-1 rounded"
-          required
-        />
-      </div>
+      <form className="bg-white shadow-lg rounded-lg p-6 space-y-4" onSubmit={handleSubmit}>
+        
+        {/* Title */}
+        <div>
+          <label className="block font-semibold mb-1">Recipe Title</label>
+          <input
+            type="text"
+            className="w-full border rounded-lg p-2"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Enter recipe title"
+          />
+          {errors.title && <p className="text-red-500 text-sm">{errors.title}</p>}
+        </div>
 
-      <div>
-        <label className="block font-semibold mb-1">Ingredients (one per line)</label>
-        <textarea
-          value={ingredients}
-          onChange={(e) => setIngredients(e.target.value)}
-          className="w-full border px-2 py-1 rounded"
-          required
-        />
-      </div>
+        {/* Ingredients */}
+        <div>
+          <label className="block font-semibold mb-1">Ingredients</label>
+          <textarea
+            className="w-full border rounded-lg p-2"
+            value={ingredients}
+            onChange={(e) => setIngredients(e.target.value)}
+            placeholder="List the ingredients"
+            rows={4}
+          ></textarea>
+          {errors.ingredients && <p className="text-red-500 text-sm">{errors.ingredients}</p>}
+        </div>
 
-      <div>
-        <label className="block font-semibold mb-1">Steps (one per line)</label>
-        <textarea
-          value={steps}
-          onChange={(e) => setSteps(e.target.value)}
-          className="w-full border px-2 py-1 rounded"
-          required
-        />
-      </div>
+        {/* Steps */}
+        <div>
+          <label className="block font-semibold mb-1">Preparation Steps</label>
+          <textarea
+            className="w-full border rounded-lg p-2"
+            value={steps}
+            onChange={(e) => setSteps(e.target.value)}
+            placeholder="Describe the steps"
+            rows={4}
+          ></textarea>
+          {errors.steps && <p className="text-red-500 text-sm">{errors.steps}</p>}
+        </div>
 
-      <button
-        type="submit"
-        className="bg-blue-600 text-white px-4 py-2 rounded"
-      >
-        Add Recipe
-      </button>
-    </form>
+        <button
+          type="submit"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg"
+        >
+          Submit Recipe
+        </button>
+      </form>
+    </div>
   );
 }
+
+export default AddRecipeForm;

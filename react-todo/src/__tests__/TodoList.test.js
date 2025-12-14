@@ -27,7 +27,7 @@ describe("TodoList Component", () => {
 
   test("deletes a todo", () => {
     render(<TodoList />);
-    const deleteButton = screen.getByText("Delete", { selector: "button" });
+    const deleteButton = screen.getAllByText("Delete")[0];
     fireEvent.click(deleteButton);
     expect(screen.queryByText("Learn React")).not.toBeInTheDocument();
   });

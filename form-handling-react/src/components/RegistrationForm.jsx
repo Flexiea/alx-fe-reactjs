@@ -4,18 +4,31 @@ const RegistrationForm = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState({});
   const [success, setSuccess] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!username || !email || !password) {
-      setError("All fields are required");
-      return;
+    const newErrors = {};
+
+    if (!username) {
+      newErrors.username = "Username is required";
     }
 
-    setError("");
+    if (!email) {
+      newErrors.email = "Email is required";
+    }
+
+    if (!password) {
+      newErrors.password = "Password is required";
+    }
+
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length > 0) {
+      return;
+    }
 
     try {
       await fetch("https://jsonplaceholder.typicode.com/posts", {
@@ -30,8 +43,9 @@ const RegistrationForm = () => {
       setUsername("");
       setEmail("");
       setPassword("");
-    } catch (err) {
-      console.error(err);
+      setErrors({});
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -44,6 +58,7 @@ const RegistrationForm = () => {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
+        {errors.username && <p style={{ color: "red" }}>{errors.username}</p>}
       </div>
 
       <div>
@@ -53,6 +68,7 @@ const RegistrationForm = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
+        {errors.email && <p style={{ color: "red" }}>{errors.email}</p>}
       </div>
 
       <div>
@@ -62,12 +78,14 @@ const RegistrationForm = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
+        {errors.password && (
+          <p style={{ color: "red" }}>{errors.password}</p>
+        )}
       </div>
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      {success && <p style={{ color: "green" }}>{success}</p>}
-
       <button type="submit">Register</button>
+
+      {success && <p style={{ color: "green" }}>{success}</p>}
     </form>
   );
 };

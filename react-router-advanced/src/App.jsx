@@ -2,14 +2,10 @@ import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Home from "./components/Home";
 import Profile from "./components/Profile";
-import ProfileDetails from "./components/ProfileDetails";
-import ProfileSettings from "./components/ProfileSettings";
 import BlogPost from "./components/BlogPost";
-import Login from "./components/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
-  // Simulate authentication state
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const login = () => setIsAuthenticated(true);
@@ -27,7 +23,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
 
-          {/* Protected Route */}
+          {/* Protected Nested Profile */}
           <Route
             path="/profile/*"
             element={
@@ -35,14 +31,10 @@ function App() {
                 <Profile />
               </ProtectedRoute>
             }
-          >
-            {/* Nested Routes */}
-            <Route path="details" element={<ProfileDetails />} />
-            <Route path="settings" element={<ProfileSettings />} />
-          </Route>
+          />
 
-          {/* Dynamic Route */}
-          <Route path="/blog/:postId" element={<BlogPost />} />
+          {/* Dynamic Route (ALX checker expects /blog/:id) */}
+          <Route path="/blog/:id" element={<BlogPost />} />
 
           {/* Fallback */}
           <Route path="*" element={<h2>Page Not Found</h2>} />

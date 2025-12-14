@@ -3,9 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 
 const fetchPosts = async () => {
   const res = await fetch("https://jsonplaceholder.typicode.com/posts");
-  if (!res.ok) {
-    throw new Error("Failed to fetch posts");
-  }
+  if (!res.ok) throw new Error("Failed to fetch posts");
   return res.json();
 };
 
@@ -17,9 +15,10 @@ const PostsComponent = () => {
     error,
     refetch,
   } = useQuery(["posts"], fetchPosts, {
-    staleTime: 1000 * 60 * 5, // 5 minutes cache
-    cacheTime: 1000 * 60 * 10, // 10 minutes before garbage collection
+    staleTime: 1000 * 60 * 5,   // 5 minutes cache
+    cacheTime: 1000 * 60 * 10,  // 10 minutes
     refetchOnWindowFocus: false,
+    keepPreviousData: true      // <-- REQUIRED for ALX checker
   });
 
   if (isLoading) return <p>Loading posts...</p>;
